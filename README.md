@@ -46,7 +46,7 @@ Detailed breakdowns of the theoretical and architectural decisions made during t
 ---
 
 ## 👥 Contributors & Acknowledgments
-* **Mohamed Nafti** – DevOps & Infrastructure Design
-* *Rabeb Dhahri* – Core Implementation
-* *Ameni Ben Abdallah* – Technical Research
+* **Mohamed Nafti**
+* *Rabeb Dhahri*
+* *Ameni Ben Abdallah*
 * Special thanks to **Fedi Brinsi** for technical guidance and **Securinets FST** for providing the platform to execute this lab.

@@ -114,3 +114,25 @@ temp/
 *.qcow2
 *.vdi
 *.vmdk
+
+# =========================
+# SOC lab / MISP sensitive data
+# =========================
+
+# MISP runtime secrets
+misp-docker/.env
+misp-docker/kubernetes/*secrets*.env
+misp-docker/kubernetes/*credentials*.env
+misp-docker/ssl/
+
+# Lab backups
+soc-lab-backup*
+*.tar
+*.tar.gz
+*.tgz
+
+# Cortex runtime secrets
+
+# Local secret/config files
+*.local
+*.local.*

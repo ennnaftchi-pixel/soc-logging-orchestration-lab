@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:9200/_cluster/health >/dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    container_name: cortex-es
+    restart: always
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    ports:
+      - "9200:9200"
+    volumes:
+      - cortex-es-data:/usr/share/elasticsearch/data
+    networks:
+      - soc_net
+
+  cortex:
+    image: thehiveproject/cortex:3.1.8
+    container_name: cortex
+    restart: always
+    environment:
+      no_config_es: "1"
+      JOB_DIRECTORY: /tmp/cortex-jobs
+      DOCKER_HOST: unix:///var/run/docker.sock
+    ports:
+      - "9001:9001"
+    volumes:
+      - cortex-data:/var/lib/cortex
+      - /var/run/docker.sock:/var/run/docker.sock
+      - cortex-jobs:/tmp/cortex-jobs
+      - ./cortex-config/application.conf:/etc/cortex/application.conf
+    networks:
+      - soc_net
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+
+volumes:
+  cortex-data:
+  cortex-jobs:
+  cortex-es-data:
+
+networks:
+  soc_net:
+    external: true

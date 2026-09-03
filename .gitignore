@@ -1,0 +1,19 @@
+# TheHive data
+data/
+
+# Environment / secrets
+.env
+.env.*
+secrets/
+
+# API keys / certificates
+*.key
+*.pem
+*.secret
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp

@@ -1,0 +1,51 @@
+version: "3.8"
+
+services:
+  cassandra:
+    image: cassandra:4.1
+    container_name: cassandra
+    environment:
+      - MAX_HEAP_SIZE=1G
+      - HEAP_NEWSIZE=100M
+      - CASSANDRA_CLUSTER_NAME=thehive
+    volumes:
+      - ./data/cassandra:/var/lib/cassandra
+    networks:
+      - thehive-net
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.13
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    volumes:
+      - ./data/elasticsearch:/usr/share/elasticsearch/data
+    networks:
+      - thehive-net
+
+  thehive:
+    image: strangebee/thehive:5.3
+    container_name: thehive
+    depends_on:
+      - cassandra
+      - elasticsearch
+    ports:
+      - "9000:9000"
+    command:
+      - --cql-hostnames
+      - cassandra
+      - --index-backend
+      - elasticsearch
+      - --es-hostnames
+      - elasticsearch
+      - --no-config-cortex
+    volumes:
+      - ./data/thehive:/opt/thp/thehive/files
+    networks:
+      - thehive-net
+
+networks:
+  thehive-net:
+    driver: bridge
